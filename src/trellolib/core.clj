@@ -3,7 +3,7 @@
             [cheshire.core :as cheshire]
             [clj-http.client :as httpclient]))
 
-(def test-card {:name "hello" :desc "world" :idList "53c8c8207dfb7da6d039cb95"})
+(def test-card {:name "hello" :desc "world" :idList "<yourid>"})
 (def test-client {:key "<yourkey>"
                   :token "<yourtoken>"
                   :name "<yourapplicationname>"})
