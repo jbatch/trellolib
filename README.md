@@ -21,6 +21,9 @@ run `lein midje` from the command line
 (def test-client {:key <your key>
                   :name <yourname})
 
+; If you don't know your application id you can get it from Trello
+; (here)[https://trello.com/1/appKey/generate]
+
 ; Now you can use this to generate the url your user needs to go to
 ; to authorize your application
 
@@ -39,6 +42,9 @@ run `lein midje` from the command line
 ; like so
 
 (trello/trello-get (trello/get-lists test-client "<yourboardid>"))
+
+; You can get a board id by going to the board you like and copying
+; it from the URL. It will look like https://trello.com/b/<boardid>/hello-world
 
 ; With this we can now create our card
 (def test-card {:name "This is my test card"
