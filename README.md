@@ -34,7 +34,13 @@ run `lein midje` from the command line
                   :name <yourname>
                   :token <tokenfromuser>})
 
-; Next we need a card to post
+; Now we need the id of the list we want to post the card to
+; If you don't know this you can get all the lists from a board
+; like so
+
+(trello/trello-get (trello/get-lists test-client "<yourboardid>"))
+
+; With this we can now create our card
 (def test-card {:name "This is my test card"
                 :desc "This is the description of my test card"
                 :idList <id of list you want to put card on>})
