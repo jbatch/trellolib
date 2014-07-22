@@ -22,7 +22,7 @@ run `lein midje` from the command line
                   :name <yourname})
 
 ; If you don't know your application id you can get it from Trello
-; (here)[https://trello.com/1/appKey/generate]
+; [here](https://trello.com/1/appKey/generate)
 
 ; Now you can use this to generate the url your user needs to go to
 ; to authorize your application
