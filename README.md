@@ -17,11 +17,24 @@ run `lein midje` from the command line
 ``` clojure
 (require '[trellolib :as trello])
 
-; Need to create a client to test
+; First you will need to create a client to test
 (def test-client {:key <your key>
-                  :token <your token>})
+                  :name <yourname})
 
-; Need to have a card we want to post
+; Now you can use this to generate the url your user needs to go to
+; to authorize your application
+
+(trello/authorize-url test-client)
+
+; Your user will go to that url and *hopefully* let your application access
+; thier Trello account. They will be given a key to give back to you. You
+; can now update your client to include this
+
+(def test-client {:key <your key>
+                  :name <yourname>
+                  :token <tokenfromuser>})
+
+; Next we need a card to post
 (def test-card {:name "This is my test card"
                 :desc "This is the description of my test card"
                 :idList <id of list you want to put card on>})
