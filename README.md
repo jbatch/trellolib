@@ -15,7 +15,7 @@ run `lein midje` from the command line
 
 ## Example
 ``` clojure
-(require ['trellolib :as trello])
+(require '[trellolib :as trello])
 
 ; Need to create a client to test
 (def test-client {:key <your key>
@@ -33,7 +33,7 @@ run `lein midje` from the command line
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 Josh Batchelor
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
