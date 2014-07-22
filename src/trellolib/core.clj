@@ -1,23 +1,43 @@
 (ns trellolib.core
   (:require [trellolib.validation :refer :all]
             [cheshire.core :as cheshire]
-            [clj-http.client :as httpclient]))
+            [clj-http.client :as httpclient]
+            [clojure.string :as str]))
 
 (def test-card {:name "hello" :desc "world" :idList "<yourid>"})
 (def test-client {:key "<yourkey>"
                   :token "<yourtoken>"
                   :name "<yourapplicationname>"})
 
+(def trello-base-url "https://trello.com/1/")
+
+;; Taken, from:
+;; https://github.com/ring-clojure/ring-codec/blob/master/src/ring/util/codec.clj
+(defn encode-param
+  "Given a hash map, will return a string of the hash map encoded URL."
+  [params]
+  (letfn [(encode-param [[k v]] (str (name k) "=" v))]
+    (->> params
+         (mapcat
+          (fn [[k v]]
+            (if (or (seq? v) (sequential? v))
+              (map #(encode-param [k %]) v)
+              [(encode-param [k v])])))
+         (str/join "&"))))
+
+(def default-authorize-opts {:expiration "never"
+                             :response_type "token"
+                             :scope "read,write"})
+
 (defn authorize-url
   "Generates the url to authorize the application to access users
-  trello"
+  Trello."
   [client]
-  (str "https://trello.com/1/authorize"
-       "/?key="
-       (:key client)
-       "&name=" (:name client)
-       "&expiration=never"
-       "&response_type=token&scope=read,write"))
+  (let [client (select-keys client [:key :name :expiration
+                                    :response_type :scope])
+        client (merge default-authorize-opts client)]
+    (str trello-base-url
+        "authorize/?" (encode-param client))))
 
 (defn get-access
   "Gets access token from user"
@@ -32,12 +52,13 @@
   (cheshire/decode (:body (httpclient/get url))))
 
 (defn get-url
-  "Generates the url requires given the RESTful extension (ie \"cards\")"
+  "Generates the url requires given the RESTful extension (ie
+  \"cards\")"
   [client req]
-  (str "https://trello.com/1/"
+  (str trello-base-url
        req
-       "?key=" (:key client)
-       "&token=" (:token client)))
+       "?"
+       (encode-param (select-keys client [:key :token]))))
 
 (defn get-lists
   "Requests a sequence of the lists on a board"
