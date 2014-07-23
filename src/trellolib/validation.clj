@@ -17,8 +17,7 @@
   "Validates that a client has the required keys"
   [card client]
   (-> card
-      (key-exists client :key)
-      (key-exists client :token)))
+      (key-exists client :credentials)))
 
 (defn validate-card-keys
   "Validates that a card has the required keys"

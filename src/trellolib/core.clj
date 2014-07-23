@@ -55,8 +55,6 @@
         (assoc :request-token request-token)
         (assoc :authorize-url authorize-url))))
 
-(authorize-client test-client)
-
 (defn get-access-token
   "Takes a client and a verifier and associates the client with an
   access token response "
@@ -65,8 +63,6 @@
                                                   (:request-token client)
                                                   verifier)]
     (assoc client :access-token access-token-response)))
-
-(get-access-token (authorize-client test-client) "2185eacd2ccfebe76bfeb0a6dae672f7")
 
 (defn get-credentials
   "Takes a client and associates it with OAuth credentials for a given request"
@@ -140,6 +136,6 @@
       (validate-card-keys)
       (validate-string-length :name)
       (validate-string-length :desc)
-      (trello-post new-client (get-url "cards"))
+      (trello-post client (get-url "cards"))
       (:body)
       (cheshire/decode true)))

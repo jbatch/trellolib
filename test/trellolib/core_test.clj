@@ -3,6 +3,7 @@
             [trellolib.core :as core]
             [trellolib.validation :refer :all]))
 
+
 (def test-card {:name "hello" :desc "world" :idList "<youridhere>"})
 (def test-card-with-errors {:name "hello"
                             :desc "world"
@@ -26,18 +27,18 @@
              (add-error
               test-card-with-errors
               {:a "new"}) => (contains {:errors '({:a "new"} {:a "old"})}))
-       (fact "validate-client-keys detects errors in clients"
-             (validate-client-keys test-card test-client) => test-card
-             (validate-client-keys test-card {:key "1234"
-                                                   :not-token "4321"})
-             => (contains {:errors '({:desc "Expected key not found"
-                                      :field ":token"})})
-             (validate-client-keys
-              test-card
-              {:not-key "1234" :not-token "4321"})
-             => (contains {:errors
-                           '({:desc "Expected key not found" :field ":token"}
-                             {:desc "Expected key not found" :field ":key"})}))
+       ;(fact "validate-client-keys detects errors in clients"
+       ;      (validate-client-keys test-card test-client) => test-card
+       ;      (validate-client-keys test-card {:key "1234"
+       ;                                            :not-token "4321"})
+       ;      => (contains {:errors '({:desc "Expected key not found"
+       ;                               :field ":token"})})
+       ;      (validate-client-keys
+       ;       test-card
+       ;       {:not-key "1234" :not-token "4321"})
+       ;      => (contains {:errors
+       ;                    '({:desc "Expected key not found" :field ":token"}
+       ;                      {:desc "Expected key not found" :field ":key"})}))
        (fact "validate-card-keys detects errors in cards"
              (validate-card-keys test-card) => test-card
              (validate-card-keys {:name "a" :desc "b" :not-idList "c"})
