@@ -32,7 +32,7 @@
   "Validates that a strings length is between 1 and 16384"
   [card key]
   (let [len (count (key card))]
-    (if-not (and (> len 0)
+    (if-not (and (pos? len)
                  (< len 16385))
       (add-error card
                  {:desc "String length not in the range 1-16384"
