@@ -113,8 +113,8 @@
 
 (defn get-lists
   "Requests a sequence of the lists on a board"
-  [client board]
-  (get-url client (str "boards/" board "/lists")))
+  [board]
+  (get-url (str "boards/" board "/lists")))
 
 (defn trello-post
   "Performs a POST request on a trello uri"
@@ -140,21 +140,6 @@
       (validate-card-keys)
       (validate-string-length :name)
       (validate-string-length :desc)
-      (trello-post (get-url client "cards") client)
+      (trello-post new-client (get-url "cards"))
       (:body)
       (cheshire/decode true)))
-
-(def card {:name "testcard" :idList "listId" :desc "card"})
-
-(def test-client {:key "yourkey"
-                  :secret "secret"
-                  :name "OAuth App"
-                  :callback "localhost"})
-
-(def new-client (get-credentials (get-access-token (authorize-client test-client) "verifier") :GET (get-url "boards/Ao0XENXN")))
-
-(wrap-credentials (:credentials new-client))
-
-(trello-get (get-url "boards/Ao0XENXN") new-client)
-(trello-get (get-url "boards/Ao0XENXN/lists") new-client)
-(trello-post card new-client (get-url "cards"))
