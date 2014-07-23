@@ -7,7 +7,7 @@ A Clojure library designed to interact with trello through clojure
 
 ## Installing
 
-add `[trellolib "0.1.0-SNAPSHOT"]` as a Leiningen dependency to get the latest release
+add `[trellolib "0.2.0-SNAPSHOT"]` as a Leiningen dependency to get the latest release
 
 ## Running Tests
 
