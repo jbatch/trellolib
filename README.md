@@ -85,7 +85,12 @@ run `lein midje` from the command line
 ; If you don't know this you can get all the lists from a board
 ; like so
 
-(trello/trello-get (trello/get-lists "<yourboardid>") access-client)
+; Before we do any GET or POST request we need to generate a new
+; set of credentials.
+
+(def cred-client (trello/get-credentials access-client :GET (trello/get-lists "<board>")))
+
+(trello/trello-get (trello/get-lists "<yourboardid>") cred-client)
 
 ; You can get a board id by going to the board you like and copying
 ; it from the URL. It will look like https://trello.com/b/<boardid>/hello-world
@@ -95,8 +100,12 @@ run `lein midje` from the command line
                 :desc "This is the description of my test card"
                 :idList <id of list you want to put card on>})
 
+;Now we need a new set of credentials
+
+(def cred-client (trello/get-credentials access-client :POST (trello/get-url "cards")))
+
 ;now we can simply post our card
-(trello/post-card test-card access-client)
+(trello/post-card test-card cred-client)
 ```
 
 
