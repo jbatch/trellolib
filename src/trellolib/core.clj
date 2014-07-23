@@ -86,4 +86,4 @@
       (validate-string-length :desc)
       (trello-post (get-url client "cards"))
       (:body)
-      (cheshire/decode)))
+      (cheshire/decode true)))
