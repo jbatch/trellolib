@@ -45,11 +45,13 @@
                                            "OAuthGetAccessToken")
                                       (str trello-base-url
                                            "OAuthAuthorizeToken")
-                                      :hmac-sha1)
+                                      (:signature-method client :hmac-sha1))
         request-token (oauth/request-token consumer (:callback client))
         authorize-url (str (oauth/user-approval-uri consumer
                                                     (:oauth_token request-token))
-                           "&name=MyApp&expiration=never&scope=read,write")]
+                           "&name=" (:name client "MyApp")
+                           "&expiration=" (:expiration client "never")
+                           "&scope=" (:scope client "read,write"))]
     (-> client
         (assoc :consumer consumer)
         (assoc :request-token request-token)
@@ -74,21 +76,6 @@
                                        uri)]
     (assoc client :credentials credentials)))
 
-
-(def default-authorize-opts {:expiration "never"
-                             :response_type "token"
-                             :scope "read,write"})
-
-(defn authorize-url-old
-  "Generates the url to authorize the application to access users
-  Trello."
-  [client]
-  (let [client (select-keys client [:key :name :expiration
-                                    :response_type :scope])
-        client (merge default-authorize-opts client)]
-    (str trello-base-url
-         "authorize/?" (encode-param client))))
-
 (defn wrap-credentials
   "Wraps crediantials in an Authorization header"
   [credentials]
@@ -98,7 +85,7 @@
 (defn get-json
   "Takes an http response and returns the body as a clojure datatype"
   [url]
-  (cheshire/decode (:body (httpclient/get url))))
+  (cheshire/decode (:body (httpclient/get url)) true))
 
 (defn get-url
   "Generates the url requires given the RESTful extension (ie
@@ -122,11 +109,7 @@
 (defn trello-get
   "Performs a GET request on a trello uri"
   [uri client]
-  (cheshire/decode (:body
-                    (httpclient/get
-                     uri
-                     {:headers
-                      (wrap-credentials (:credentials client))}))))
+  (get-json uri {:headers(wrap-credentials (:credentials client))}))
 
 (defn post-card
   "Posts a new card on a list"
