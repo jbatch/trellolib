@@ -7,6 +7,9 @@
 
 (def trello-base-url "https://trello.com/1/")
 
+(defn has-keys? [m keys]
+  (apply = (map count [keys (select-keys m keys)])))
+
 ;; Taken, from:
 ;; https://github.com/ring-clojure/ring-codec/blob/master/src/ring/util/codec.clj
 (defn encode-param
@@ -37,6 +40,8 @@
   "Takes a client with a key and secret and returns the client with a
   request-token and autorize-url attached"
   [client]
+  {:pre [(has-keys? client [:key :secret :callback])]
+   :post [(has-keys? % [:key :secret :callback :request-token :consumer :authorize-url])]}
   (let [consumer (oauth/make-consumer (:key client)
                                       (:secret client)
                                       (str trello-base-url
@@ -61,6 +66,11 @@
   "Takes a client and a verifier and associates the client with an
   access token response "
   [client verifier]
+  {:pre [(has-keys? client [:key :secret :callback
+                            :request-token :consumer :authorize-url])]
+   :post [(has-keys? % [:key :secret :callback
+                        :request-token :consumer :authorize-url
+                        :access-token])]}
   (let [access-token-response (oauth/access-token (:consumer client)
                                                   (:request-token client)
                                                   verifier)]
@@ -69,6 +79,12 @@
 (defn get-credentials
   "Takes a client and associates it with OAuth credentials for a given request"
   [client request-type uri]
+  {:pre [(has-keys? client [:key :secret :callback
+                        :request-token :consumer :authorize-url
+                            :access-token])]
+   :post [(has-keys? % [:key :secret :callback
+                        :request-token :consumer :authorize-url
+                        :access-token :credentials])]}
   (let [credentials (oauth/credentials (:consumer client)
                                        (:oauth_token (:access-token client))
                                        (:oauth_token_secret (:access-token client))
