@@ -80,17 +80,14 @@
   "Takes a client and associates it with OAuth credentials for a given request"
   [client request-type uri]
   {:pre [(has-keys? client [:key :secret :callback
-                        :request-token :consumer :authorize-url
-                            :access-token])]
-   :post [(has-keys? % [:key :secret :callback
-                        :request-token :consumer :authorize-url
-                        :access-token :credentials])]}
+                            :request-token :consumer :authorize-url
+                            :access-token])]}
   (let [credentials (oauth/credentials (:consumer client)
                                        (:oauth_token (:access-token client))
                                        (:oauth_token_secret (:access-token client))
                                        request-type
                                        uri)]
-    (assoc client :credentials credentials)))
+    credentials))
 
 (defn wrap-credentials
   "Wraps crediantials in an Authorization header"
@@ -100,8 +97,8 @@
 
 (defn get-json
   "Takes an http response and returns the body as a clojure datatype"
-  [url]
-  (cheshire/decode (:body (httpclient/get url)) true))
+  [response]
+  (cheshire/decode (:body response) true))
 
 (defn get-url
   "Generates the url requires given the RESTful extension (ie
@@ -110,31 +107,29 @@
   (str trello-base-url
        req))
 
-(defn get-lists
-  "Requests a sequence of the lists on a board"
-  [board]
-  (get-url (str "boards/" board "/lists")))
-
-(defn trello-post
+(defn post
   "Performs a POST request on a trello uri"
   [body client uri]
-  (httpclient/post uri {:headers (wrap-credentials (:credentials client))
-                        :content-type :json
-                        :body (cheshire/encode body)}))
+  (let [credentials (get-credentials client :POST uri)]
+    (httpclient/post uri {:headers (wrap-credentials credentials)
+                          :content-type :json
+                          :body (cheshire/encode body)})))
 
-(defn trello-get
+(defn get
   "Performs a GET request on a trello uri"
   [uri client]
-  (get-json uri {:headers(wrap-credentials (:credentials client))}))
+  (let [credentials (get-credentials client :GET uri)]
+    (get-json (httpclient/get uri {:headers (wrap-credentials credentials)}))))
+
+(defn get-lists
+  "Requests a sequence of the lists on a board"
+  [board client]
+  (get (get-url (str "boards/" board "/lists")) client))
 
 (defn post-card
   "Posts a new card on a list"
   [card client]
   (-> card
-      (validate-client-keys client)
-      (validate-card-keys)
-      (validate-string-length :name)
-      (validate-string-length :desc)
-      (trello-post client (get-url "cards"))
+      (post client (get-url "cards"))
       (:body)
       (cheshire/decode true)))
