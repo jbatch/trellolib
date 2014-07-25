@@ -1,4 +1,4 @@
-(defproject trellolib "0.2.0-SNAPSHOT"
+(defproject trellolib "0.2.1-SNAPSHOT"
   :description "A clojure library for interacting with Trello"
   :url "http://https://github.com/jbatch/trellolib"
   :license {:name "Eclipse Public License"
