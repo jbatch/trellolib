@@ -4,7 +4,6 @@
             [trellolib.validation :refer :all]
             [oauth.client :as oauth]))
 
-
 (def test-card {:name "hello" :desc "world" :idList "<youridhere>"})
 (def test-card-with-errors {:name "hello"
                             :desc "world"
@@ -110,11 +109,10 @@
                                   access-client
                                   :PUT
                                   (core/get-url "cards"))
-                                 => (contains {:credentials
-                                               {:oauth_signature "<signature>"
-                                                :oauth_token "<accesstoken>"
-                                                :oauth_consumer_key "<yourkey>"
-                                                :oauth_signature_method "HMAC-SHA1"
-                                                :oauth_timestamp "<timestamp>"
-                                                :oauth_nonce "<nonce>"
-                                                :oauth_version "1.0"}} ))))
+                                 => (contains {:oauth_signature "<signature>"
+                                               :oauth_token "<accesstoken>"
+                                               :oauth_consumer_key "<yourkey>"
+                                               :oauth_signature_method "HMAC-SHA1"
+                                               :oauth_timestamp "<timestamp>"
+                                               :oauth_nonce "<nonce>"
+                                               :oauth_version "1.0"} ))))
