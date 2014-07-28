@@ -1,4 +1,5 @@
 (ns trellolib.core
+  (:refer-clojure :exclude [get])
   (:require [trellolib.validation :refer :all]
             [cheshire.core :as cheshire]
             [clj-http.client :as httpclient]
