@@ -39,7 +39,7 @@
 
 (defn authorize-client
   "Takes a client with a key and secret and returns the client with a
-  request-token and autorize-url attached"
+  request-token and authorize-url attached."
   [client]
   {:pre [(has-keys? client [:key :secret :callback])]
    :post [(has-keys? % [:key :secret :callback :request-token :consumer :authorize-url])]}

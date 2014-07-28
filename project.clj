@@ -7,4 +7,5 @@
                  [clj-http "0.9.2"]
                  [cheshire "5.3.1"]
                  [clj-oauth "1.5.1"]]
-  :profiles {:dev {:dependencies [[midje "1.6.3"]]}})
+  :profiles {:dev {:dependencies [[midje "1.6.3"]
+                                  [ring/ring-core "1.3.0"]]}})
