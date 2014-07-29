@@ -11,7 +11,7 @@ add `[trellolib "0.2.0-SNAPSHOT"]` as a Leiningen dependency to get the latest r
 
 ## Running Tests
 
-run `lein midje` from the command line
+run `lein midje` from the command line.
 
 ## Example
 ``` clojure
